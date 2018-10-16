@@ -1,0 +1,85 @@
+package ${package}.entity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+import javax.persistence.*;
+import java.util.Date;
+import java.io.Serializable;
+
+/**
+ * Created by HYP on 2018/10/11.
+ */
+@Entity
+@Table(name = "${table.tableName}", schema = "${table.tableSchema}", catalog = "")
+public class ${table.upperName}Entity implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
+	 <% for(each in table.columns) { %>
+	/**
+	 * ${each.describe}
+	 */
+	private ${each.javaType} ${each.lowerName};
+	
+    <% } %>
+        <% for(each in table.keys) { %>
+	/**
+	 * ${each.describe}
+	 */
+	private ${each.javaType} ${each.lowerName};
+	
+    <% } %>
+	
+	public ${table.upperName}Entity(){}
+	
+	<% for(each in table.columns) { %>
+	/**
+	 * 
+	 * @return ${each.describe}
+	 */
+	@Basic
+	@Column(name = "${each.columnName}"<% if(each.voJavaType=="String"){%>,columnDefinition = "${each.typeName}(${each.columnSize})"<% } %>)
+	<% if(each.voJavaType=="Date"){%>
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	<% }%>
+	public ${each.javaType} get${each.upperName}() {
+	    return this.${each.lowerName};
+	}
+	public void set${each.upperName}(${each.javaType} ${each.lowerName}) {
+	    this.${each.lowerName} = ${each.lowerName};
+	}
+    <%}%>
+	
+	 <% for(each in table.keys) { %>
+	/**
+	 * 
+	 * @return ${each.describe}
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "mseq")
+    @SequenceGenerator(name="mseq",sequenceName = "s${table.tableName}__id",allocationSize=1)
+	@Column( name = "${each.columnName}")
+	public ${each.javaType} get${each.upperName}() {
+	    return this.${each.lowerName};
+	}
+	
+	/**
+	 * 
+	 * @param ${each.lowerName} ${each.describe}
+	 */
+	public void set${each.upperName}(${each.javaType} ${each.lowerName}) {
+	    this.${each.lowerName} = ${each.lowerName};
+	}
+	
+    <%}%>
+    
+	@Override
+	public String toString() {
+		return "${table.upperName}:["
+				    <% for(each in table.columns) { %>
+				    +"\n\t${each.lowerName}="+ ${each.lowerName} 
+		    		<% } %>
+					+"\n]";
+
+    }
+}

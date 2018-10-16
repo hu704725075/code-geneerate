@@ -1,0 +1,13 @@
+package ${package}.repository;
+import ${package}.entity.${table.upperName}Entity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
+/**
+ * Created by HYP on 2018/10/11.
+ */
+public interface ${table.upperName}Repository extends PagingAndSortingRepository<${table.upperName}Entity,Integer> ,
+JpaSpecificationExecutor<${table.upperName}Entity>,
+JpaRepository<${table.upperName}Entity,Integer> {
+
+}

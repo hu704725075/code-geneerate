@@ -1,0 +1,100 @@
+package ${package}.controller;
+
+import ${package}.entity.${table.upperName};
+import ${package}.vo.${table.upperName}Vo;
+import ${package}.service.${table.upperName}Service;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
+import java.util.HashMap;
+import org.apache.log4j.Logger;
+import java.util.Map;
+
+
+@Controller()
+@RequestMapping("${table.moduleName}/${table.lowerName }")
+public class ${table.upperName}Controller  {
+   
+   	public static final Logger log = Logger.getLogger( ${table.upperName }Controller.class);
+    @Autowired
+    private ${table.upperName}Service ${table.lowerName }Service;
+    
+    @RequestMapping("/add")
+   	public String add(${table.upperName}Vo entity,RedirectAttributes redirceAttr){
+    	try {
+    		boolean flag = ${table.lowerName }Service.insert${table.upperName}(entity);
+    		if(flag){
+    			
+    			redirceAttr.addAttribute("errCode", "0");
+    			redirceAttr.addAttribute("errDesc", "新增成功"); 
+			}else{
+				redirceAttr.addAttribute("errCode", "9999");
+				redirceAttr.addAttribute("errDesc", "新增失败"); 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("${table.methodNo}"+":"+e.getMessage());
+			redirceAttr.addAttribute("errCode", "9999");
+			redirceAttr.addAttribute("errDesc", "新增失败");
+		}
+   	
+   		return "redirect:${table.moduleName}/${table.lowerName }/list.do";
+   	}
+ 
+	@RequestMapping("/toAdd")
+	public String toAdd(HttpServletRequest request){
+	  
+		return "${table.moduleName}/${table.lowerName }/add";
+	}
+   	@RequestMapping("/edit")
+   	public String edit(${table.upperName}Vo entity,RedirectAttributes redirceAttr){
+    	try {
+    		boolean flag = ${table.lowerName }Service.update${table.upperName }(entity);
+    		if(flag){
+    			
+    			redirceAttr.addAttribute("errCode", "0");
+    			redirceAttr.addAttribute("errDesc", "编辑成功"); 
+			}else{
+				redirceAttr.addAttribute("errCode", "9999");
+				redirceAttr.addAttribute("errDesc", "编辑失败"); 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("${table.methodNo}"+":"+e.getMessage());
+			redirceAttr.addAttribute("errCode", "9999");
+			redirceAttr.addAttribute("errDesc", "编辑失败");
+		}
+   	
+   		return "redirect:${table.moduleName}/${table.lowerName }/list.do";
+   	}
+  
+	@RequestMapping("/delete")
+   	public String delete(${table.upperName}Vo entity,RedirectAttributes redirceAttr){
+    	try {
+    		boolean flag = ${table.lowerName }Service.delete${table.upperName }(entity);
+    		if(flag){
+    			
+    			redirceAttr.addAttribute("errCode", "0");
+    			redirceAttr.addAttribute("errDesc", "删除成功"); 
+			}else{
+				redirceAttr.addAttribute("errCode", "9999");
+				redirceAttr.addAttribute("errDesc", "删除失败"); 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("${table.methodNo}"+":"+e.getMessage());
+			redirceAttr.addAttribute("errCode", "9999");
+			redirceAttr.addAttribute("errDesc", "删除失败");
+		}
+   	
+   		return "redirect:${table.moduleName}/${table.lowerName }/list.do";
+   	}
+   	
+  
+	
+	
+}

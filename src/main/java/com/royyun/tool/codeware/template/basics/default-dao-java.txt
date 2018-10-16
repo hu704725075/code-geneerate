@@ -1,0 +1,48 @@
+package ${package}.dao;
+
+import java.util.List;
+import ${package}.entity.${table.upperName};
+import ${package}.vo.${table.upperName}Vo;
+${import}
+
+${annotation}
+public interface ${table.upperName }Dao <%if(interfaces!=null&&interfaces!=""){%> implements ${interfaces} <%}%>{
+
+	/**
+	 * 新增
+	 * @param entity
+	 * @return 是否成功
+	 */
+	public boolean insert${table.upperName }(${table.upperName}Vo entity);
+	
+	/**
+	 * 修改
+	 * @param entity
+	 * @return 是否成功
+	 */
+	public boolean update${table.upperName }(${table.upperName}Vo entity);
+	
+	/**
+	 * 删除
+	 * @param entity
+	 * @return 是否成功
+	 */
+	public boolean delete${table.upperName }(${table.upperName}Vo entity);
+	
+	
+	/**
+	 * 根据id查询
+	 * @param ${table.lowerName }Id
+	 * @return 
+	 */
+	public ${table.upperName}Vo query${table.upperName }ById(int ${table.lowerName }Id);
+	
+	
+	/**
+	 * 查询全部
+	 * @return 
+	 */
+	public List<${table.upperName}Vo> query${table.upperName }All();
+
+	
+}

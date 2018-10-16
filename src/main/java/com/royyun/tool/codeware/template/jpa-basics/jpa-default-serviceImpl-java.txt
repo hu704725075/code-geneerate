@@ -1,0 +1,85 @@
+package ${package}.service.impl.${table.upperName}ServiceImpl;
+import ${package}.repository.${table.upperName}Repository;
+import ${package}.entity.${table.upperName}Entity;
+import ${package}.service.I${table.upperName}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import ${package}.vo.${table.upperName}Vo;
+
+/**
+ * Created by HYP on 2018/10/11.
+ */
+@Service
+public class ${table.upperName}ServiceImpl implements I${table.upperName}Service{
+
+    @Autowired
+    ${table.upperName}Repository ${table.lowerName}Repository;
+    @Override
+    public void save${table.upperName}(${table.upperName}Entity ${table.lowerName}) {
+        ${table.lowerName}Repository.save(${table.lowerName});
+    }
+
+    @Override
+    public void delete${table.upperName}(Integer ${table.upperName}Id) {
+        ${table.lowerName}Repository.deleteById(${table.upperName}Id);
+    }
+
+    @Override
+    public void update${table.upperName}(${table.upperName}Entity ${table.lowerName}) {
+         ${table.lowerName}Repository.save(${table.lowerName});
+    }
+
+    @Override
+    public Page<${table.upperName}Entity> find${table.upperName}EntityNoCriteria(Integer pageNo, Integer pageSize) {
+        Pageable pageable = new PageRequest(pageNo-1, pageSize, Sort.Direction.ASC,<% for(each in table.keys) { %>"${each.lowerName}"<%}%> );
+        return ${table.lowerName}Repository.findAll(pageable);
+    }
+
+    @Override
+    public Page<${table.upperName}Entity> find${table.upperName}EntityCriteria(final ${table.upperName}Vo param, int pageNo, int pageSize) {
+        Pageable pageable = new PageRequest(pageNo-1, pageSize, Sort.Direction.ASC, <% for(each in table.keys) { %>"${each.lowerName}"<%}%>);
+        Page<${table.upperName}Entity> ${table.upperName}EntityPage = ${table.lowerName}Repository.findAll(new Specification<${table.upperName}Entity>(){
+            @Override
+            public Predicate toPredicate(Root<${table.upperName}Entity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+				<% for(each in table.columns) { %>
+					<% if(each.voJavaType=="String"){%>
+						if(null!=param.get${each.upperName}()&&!"".equals(param.get${each.upperName}())){
+							list.add(criteriaBuilder.equal(root.get("${each.lowerName}").as(String.class), param.get${each.upperName}()));
+						}
+					<%}else{%>
+						if(null!=param.get${each.upperName}()&&!"".equals(param.get${each.upperName}())){
+							list.add(criteriaBuilder.equal(root.get("${each.lowerName}").as(Integer.class), param.get${each.upperName}()));
+						}
+					<% }%>
+				<% } %>
+                Predicate[] p = new Predicate[list.size()];
+                return criteriaBuilder.and(list.toArray(p));
+            }
+        },pageable);
+        return ${table.upperName}EntityPage;
+
+    }
+
+
+    @Override
+    public List<${table.upperName}Entity> queryAll${table.upperName}() {
+        return (List<${table.upperName}Entity>) ${table.lowerName}Repository.findAll();
+    }
+
+    @Override
+    public Optional<${table.upperName}Entity> findOne${table.upperName}(Integer ${table.lowerName}Id) {
+        return ${table.lowerName}Repository.findById(${table.lowerName}Id);
+    }
+
+
+}

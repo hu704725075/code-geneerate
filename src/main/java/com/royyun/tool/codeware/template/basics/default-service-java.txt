@@ -1,0 +1,15 @@
+package ${package}.service;
+
+import ${package}.entity.${table.upperName};
+import ${package}.vo.${table.upperName}Vo;
+import java.util.List;
+import java.util.Map;
+
+public interface ${table.upperName}Service  {
+    
+   	public boolean insert${table.upperName }(${table.upperName}Vo entity);
+	public boolean update${table.upperName }(${table.upperName}Vo entity);
+	public boolean delete${table.upperName }(${table.upperName}Vo entity);
+	
+
+}

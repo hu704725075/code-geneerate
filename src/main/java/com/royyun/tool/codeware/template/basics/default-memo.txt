@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>${table.describe}</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td></td>
+				<td>名称</td>
+				<td>类型</td>
+				<td>描述</td>
+			</tr>
+			<% for(each in table.keys) { %> 
+			<tr>
+				<td></td>
+				<td>${each.upperName}</td>
+				<td>${each.javaType}</td>
+				<td>${each.describe}</td>
+			</tr>
+			<% } %>
+			<% for(each in table.columns) { %> 
+			<tr>
+				<td></td>
+				<td>${each.upperName}</td>
+				<td>${each.javaType}</td>
+				<td>${each.describe}</td>
+			</tr>
+			<% } %>
+		</table>
+	
+	
+	</body>
+</html>

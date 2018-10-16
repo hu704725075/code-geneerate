@@ -1,0 +1,179 @@
+package ${package}.dao.impl;
+
+
+import ${package}.dao.${table.upperName }Dao;
+import ${package}.entity.${table.upperName};
+import ${package}.vo.${table.upperName}Vo;
+import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.log4j.Logger;
+import java.util.List;
+import java.util.ArrayList;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
+${import}
+
+${annotation}
+@Repository("${table.lowerName }Dao")
+public class ${table.upperName }DaoImpl <%if(extends!=null&&extends!=""){%> extends ${extends} <%}%> implements ${table.upperName }Dao <%if(interfaces!=null&&interfaces!=""){%> ,${interfaces} <%}%> {
+	
+
+	public static final Logger log = Logger.getLogger( ${table.upperName }DaoImpl.class);
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	public boolean insert${table.upperName }(${table.upperName}Vo entity){
+		log.info(this+"insert${table.upperName }("+entity+")");
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("insert into ${table.name}  ");
+		
+		StringBuffer columns = new StringBuffer("(");
+		StringBuffer values = new StringBuffer("(");
+		List<Object> data = new ArrayList<Object>();
+		<% for(column in table.columns) { 
+			if(columnLP.last){
+			%>
+			
+		columns.append("${column.name})");
+		values.append("?)");
+		<%	}else{ %>
+		columns.append("${column.name},");
+		values.append("?,");
+		<%	} %>
+		data.add(entity.get${column.upperName}());
+		
+		<% } %> 
+         
+        sql.append(columns.toString());
+        sql.append("	values ");
+        sql.append(values.toString());
+        log.debug("exce	"+sql.toString());
+       
+        boolean flag =  jdbcTemplate.update(sql.toString(),data.toArray())>0;
+        if (!flag){
+        	throw new RuntimeException("新增失败");
+        }
+        return flag;
+		
+	}
+
+	public boolean update${table.upperName }(${table.upperName}Vo entity){
+		log.info(this+"update${table.upperName }("+entity+")");
+		StringBuffer sql = new StringBuffer();
+		sql.append("update ${table.name} ${table.alias} set");
+		List<Object> data = new ArrayList<Object>();
+		
+		<% for(column in table.columns) { 
+			if(columnLP.last){
+		%>
+		sql.append(" ${table.alias}.${column.name} = ?");
+		
+			<% }else{%>
+		sql.append(" ${table.alias}.${column.name} = ?,");
+			<%}%>
+		data.add(entity.get${column.upperName}());
+		<% } %>
+		<% for(key in table.keys) { 
+			if(keyLP.first){ %>
+		sql.append(" where ${table.alias}.${key.name} = ?");
+			<%} else{%>
+		sql.append(" and ${table.alias}.${key.name} = ?");
+		<%}%>
+		data.add(entity.get${key.upperName}());
+		<%}%>
+        log.debug("exce	"+sql.toString());
+         boolean flag =  jdbcTemplate.update(sql.toString(),data.toArray())>0;
+        if (!flag){
+        	throw new RuntimeException("修改失败");
+        }
+        return flag;
+	}
+	
+	public boolean delete${table.upperName}(${table.upperName}Vo entity){
+		log.info(this+"delete${table.upperName }("+entity+")");
+		StringBuffer sql = new StringBuffer();
+		List<Object> data = new ArrayList<Object>();
+		sql.append("delete ${table.name} ${table.alias} where 1=1 ");
+		<% for(key in table.keys) {  %>
+		sql.append(" and ${table.alias}.${key.name} = ?");
+		data.add(entity.get${key.upperName}());
+		<%}%>
+		log.debug("exce	"+sql.toString());
+		 boolean flag =  jdbcTemplate.update(sql.toString(),data.toArray())>0;
+        if (!flag){
+        	throw new RuntimeException("删除失败");
+        }
+        return flag;
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<${table.upperName}Vo> query${table.upperName }All(){
+		StringBuffer sql = new StringBuffer();
+		sql.append("select ");
+		<% for(column in table.columns) { 
+			if(columnLP.last){
+		%>
+		sql.append(" ${table.alias}.${column.name} ${column.lowerName}");
+
+		<% }else{%>
+		sql.append(" ${table.alias}.${column.name} ${column.lowerName},");
+		<%
+			}
+		 } %>
+		<% for(column in table.keys) { 
+			%>
+			sql.append(" ,${table.alias}.${column.name} ${column.lowerName}");
+
+			<% } %>
+		sql.append(" from ${table.name} ${table.alias} ");
+		
+		
+		return jdbcTemplate.query(sql.toString(),new RowMapperResultSetExtractor<${table.upperName}Vo>(new BeanPropertyRowMapper(${table.upperName}Vo.class)));
+	
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public ${table.upperName}Vo query${table.upperName }ById(int ${table.upperName }Id){
+		log.info(this+"query${table.upperName }ById("+${table.upperName }Id+")");
+		if (${table.upperName }Id!=null){
+			StringBuffer sql = new StringBuffer();
+			sql.append("select ");
+			<% for(column in table.columns) { 
+				if(columnLP.last){
+			%>
+			sql.append(" ${table.alias}.${column.name} ${column.lowerName}");
+	
+			<% }else{%>
+			sql.append(" ${table.alias}.${column.name} ${column.lowerName},");
+			<%
+				}
+			 } %>
+			<% for(column in table.keys) { 
+			%>
+			sql.append(" ,${table.alias}.${column.name} ${column.lowerName}");
+
+			<% } %>
+			
+			sql.append(" from ${table.name} ${table.alias} ");
+			List<Object> whereData = new ArrayList<Object>();
+			<% for(key in table.keys) { 
+				if(keyLP.first){
+				%>
+			sql.append(" where ${table.alias}.${key.name} =?  ");
+				
+			whereData.add(${table.upperName }Id);  
+				<%}%>
+	       
+	    	<% } %>
+	    	  log.info("exce	"+sql.toString());
+			return (${table.upperName}Vo) jdbcTemplate.queryForObject(sql.toString(),whereData.toArray(),new BeanPropertyRowMapper(${table.upperName}Vo.class));
+		
+		}
+		
+		return new ${table.upperName}Vo();
+	}
+}

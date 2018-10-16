@@ -1,0 +1,29 @@
+package ${package}.service;
+
+import ${package}.entity.${table.upperName}Entity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import java.util.List;
+import java.util.Optional;
+import ${package}.vo.${table.upperName}Vo;
+
+/**
+ * Created by HYP on 2018/10/11.
+ */
+public interface I${table.upperName}Service  {
+    //增
+    public void save${table.upperName}(${table.upperName}Entity ${table.lowerName});
+    //删
+    public void delete${table.upperName}(Integer ${table.upperName}Id);
+    //改
+    public void update${table.upperName}(${table.upperName}Entity ${table.lowerName});
+    //分页不带条件查询
+    public Page<${table.upperName}Entity> find${table.upperName}EntityNoCriteria(Integer pageNo,Integer pageSize);
+    //分页带条件查
+    public Page<${table.upperName}Entity> find${table.upperName}EntityCriteria(${table.upperName}Vo param, int pageNo,int pageSize);
+    //查所有
+    public List<${table.upperName}Entity> queryAll${table.upperName}();
+    //根据Id查
+    public Optional<${table.upperName}Entity> findOne${table.upperName}(Integer ${table.upperName}Id);
+}

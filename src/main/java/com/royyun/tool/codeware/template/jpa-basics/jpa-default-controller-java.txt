@@ -1,0 +1,134 @@
+package ${package}.controller;
+
+import ${package}.entity.${table.upperName}Entity;
+import ${package}.service.impl.${table.upperName}Impl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.*;
+import org.apache.log4j.Logger;
+import static com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table;
+
+@ResetController
+@RequestMapping("${table.moduleName}/${table.lowerName}")
+public class ${table.upperName}Controller {
+
+    public static final Logger log = Logger.getLogger(${table.upperName}Controller.class);
+
+    @Autowired
+    I${table.upperName}Service ${table.lowerName}Service;
+
+    @RequestMapping("/add")
+    public String add(${table.upperName}Entity entity, RedirectAttributes redirceAttr){
+        try {
+            ${table.lowerName}Service.save${table.upperName}(entity);
+            if(true){
+                redirceAttr.addAttribute("errCode", "0");
+                redirceAttr.addAttribute("errDesc", "新增成功");
+            }else{
+                redirceAttr.addAttribute("errCode", "9999");
+                redirceAttr.addAttribute("errDesc", "新增失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("${table.methodNo}"+":"+e.getMessage());
+            redirceAttr.addAttribute("errCode", "9999");
+            redirceAttr.addAttribute("errDesc", "新增失败");
+        }
+
+        return "redirect:${table.moduleName}/${table.lowerName }/list.do";
+    }
+
+    @RequestMapping("/toAdd")
+    public String toAdd(){
+        return "${table.moduleName}/${table.lowerName }/add";
+    }
+
+    @RequestMapping("/toEdit")
+    public String toEdit(){
+        return "${table.moduleName}/${table.lowerName }/edit";
+    }
+    @RequestMapping("/edit")
+    public String edit(${table.upperName}Entity entity,RedirectAttributes redirceAttr){
+        try {
+            ${table.lowerName}Service.save${table.upperName}(entity);
+            if(true){
+                redirceAttr.addAttribute("errCode", "0");
+                redirceAttr.addAttribute("errDesc", "编辑成功");
+            }else{
+                redirceAttr.addAttribute("errCode", "9999");
+                redirceAttr.addAttribute("errDesc", "编辑失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("${table.methodNo}"+":"+e.getMessage());
+            redirceAttr.addAttribute("errCode", "9999");
+            redirceAttr.addAttribute("errDesc", "编辑失败");
+        }
+
+        return "redirect:${table.moduleName}/${table.lowerName }/list.do";
+    }
+
+
+    @RequestMapping("/delete")
+    public String delete(Integer ${table.upperName}Id,RedirectAttributes redirceAttr){
+        try {
+             ${table.lowerName}Service.delete${table.upperName}(${table.upperName}Id);
+            if(true){
+                redirceAttr.addAttribute("errCode", "0");
+                redirceAttr.addAttribute("errDesc", "删除成功");
+            }else{
+                redirceAttr.addAttribute("errCode", "9999");
+                redirceAttr.addAttribute("errDesc", "删除失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("${table.methodNo}"+":"+e.getMessage());
+            redirceAttr.addAttribute("errCode", "9999");
+            redirceAttr.addAttribute("errDesc", "删除失败");
+        }
+
+        return "redirect:${table.moduleName}/${table.lowerName }/list.do";
+    }
+
+    @RequestMapping("/list")
+    public String listQuery(Integer pageNo, Integer pageSize, ModelAndView modelAndView){
+        Map map = new HashMap();
+        if(pageNo == null){
+            pageNo = 1;
+        }
+        if(pageSize == null){
+            pageSize = 10;
+        }
+        try {
+            Page page = ${table.lowerName}Service.find${table.upperName}EntityNoCriteria(pageNo,pageSize);
+            map.put("page",page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("${table.methodNo}"+":"+e.getMessage());
+            map.put("errCode",9999);
+            map.put("errDesc","查询失败");
+        }
+        modelAndView.addObject("data",map);
+        return "${table.moduleName}/${table.lowerName }/list.do";
+    }
+    @RequestMapping("/query")
+    public Map queryById(Integer ${table.upperName}Id){
+        Map map = new HashMap();
+        try {
+            Optional<${table.upperName}Entity> data = ${table.lowerName}Service.findOne${table.upperName}(${table.upperName}Id);
+            map.put("data",data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("${table.methodNo}"+":"+e.getMessage());
+            map.put("errCode",9999);
+            map.put("errDesc","查询失败");
+        }
+        return map;
+    }
+
+}

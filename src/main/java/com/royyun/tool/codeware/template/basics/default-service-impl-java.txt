@@ -1,0 +1,39 @@
+package ${package}.service.impl;
+
+import ${package}.entity.${table.upperName};
+import ${package}.vo.${table.upperName}Vo;
+import ${package}.dao.${table.upperName}Dao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ${package}.service.${table.upperName}Service;
+import java.util.List;
+import org.apache.log4j.Logger;
+import java.util.Map;
+
+
+@Service("${table.lowerName}Service")
+public class ${table.upperName}ServiceImpl implements  ${table.upperName}Service {
+    
+    public static final Logger log = Logger.getLogger(${table.upperName}ServiceImpl.class);
+    
+    @Autowired
+	private ${table.upperName}Dao ${table.lowerName }Dao;
+
+	public boolean insert${table.upperName }(${table.upperName}Vo entity){
+		log.info(this+"insert${table.upperName }("+entity+")");
+		return ${table.lowerName }Dao.insert${table.upperName }(entity);
+	}
+	
+	public boolean update${table.upperName }(${table.upperName}Vo entity){
+		log.info(this+"update${table.upperName }("+entity+")");
+		return  ${table.lowerName }Dao.update${table.upperName }(entity);
+	}
+	
+	public boolean delete${table.upperName }(${table.upperName}Vo entity){
+		log.info(this+"delete${table.upperName }All("+entity+")");
+		return  ${table.lowerName }Dao.delete${table.upperName }(entity);
+	}
+	
+	
+
+}
