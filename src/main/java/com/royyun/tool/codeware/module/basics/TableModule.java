@@ -48,6 +48,16 @@ public class TableModule {
         return DataColumnConvert.covert(tableName);
     }
 
+    public String getUpperName1() {
+        String camelCase = DataColumnConvert.covert(tableName.substring(1));
+        return tableName.indexOf("_") != -1 ? camelCase.substring(0, 1).toUpperCase() + camelCase.substring(1) : camelCase;
+
+    }
+
+    public String getLowerName1() {
+        return DataColumnConvert.covert(tableName.substring(1));
+    }
+
     public String getName() {
         return tableName;
     }

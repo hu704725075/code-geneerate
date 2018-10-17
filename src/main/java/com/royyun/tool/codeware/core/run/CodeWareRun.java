@@ -13,8 +13,10 @@ public class CodeWareRun {
             CodeBuilderFactory dbf = CodeBuilderFactory.newInstance();
             CodeBuilder newDefaultBuilder = dbf.newCodeBuilder("D:\\code-generate\\src\\main\\java\\com\\royyun\\tool\\codeware\\default.properties");
             Map<String, Object> contextParams = new HashMap<String, Object>();
-            //newDefaultBuilder.setContextParams(contextParams);
-            newDefaultBuilder.builderForTableToSave("t_ad");
+//            contextParams.put("tableUpperName", "User");
+//            contextParams.put("tableLowerName", "user");
+//            newDefaultBuilder.setContextParams(contextParams);
+            newDefaultBuilder.builderToSave();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

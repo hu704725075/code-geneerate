@@ -1,0 +1,23 @@
+package ${package}.service;
+
+import ${package}.common.PageInfo;
+import ${package}.pojo.${tableUpperName};
+
+import java.util.List;
+
+/**
+ * Created by HYP on 2018/10/17.
+ */
+public interface I${tableUpperName}Service {
+    List<${tableUpperName}> findAll${tableUpperName}();
+
+    int add${tableUpperName}(${tableUpperName} ${tableLowerName});
+
+    int delete${tableUpperName}(Integer ${tableLowerName}Id);
+
+    ${tableUpperName} query${tableUpperName}ById(Integer ${tableLowerName}Id);
+
+    PageInfo<${tableUpperName}> list${tableUpperName}(Integer pageNo, Integer pageSize);
+
+    Integer updateUser(User user);
+}

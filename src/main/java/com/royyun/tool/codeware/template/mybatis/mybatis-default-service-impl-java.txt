@@ -1,0 +1,56 @@
+package ${package}.service.impl;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import ${package}.common.PageInfo;
+import ${package}.dao.${tableUpperName}Mapper;
+import ${package}.pojo.${tableUpperName};
+import ${package}.service.I${tableUpperName}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * Created by HYP on 2018/10/17.
+ */
+@Service(value="${tableLowerName}Service")
+public class ${tableUpperName}ServiceImpl implements I${tableUpperName}Service {
+    private static final String TAG = "${tableUpperName}ServiceImpl";
+
+    @Autowired
+    private ${tableUpperName}Mapper ${tableLowerName}Dao;
+
+    @Override
+    public List<${tableUpperName}> findAll${tableUpperName}() {
+        return ${tableLowerName}Dao.findAll${tableUpperName}();
+    }
+
+    @Override
+    public int add${tableUpperName}(${tableUpperName} ${tableLowerName}) {
+        return ${tableLowerName}Dao.insert(${tableLowerName});
+    }
+
+    @Override
+    public int delete${tableUpperName}(Integer ${tableLowerName}Id) {
+        return ${tableLowerName}Dao.deleteByPrimaryKey(${tableLowerName}Id);
+    }
+
+    @Override
+    public ${tableUpperName} query${tableUpperName}ById(Integer ${tableLowerName}Id) {
+        return ${tableLowerName}Dao.selectByPrimaryKey(${tableLowerName}Id);
+    }
+
+    @Override
+    public PageInfo<${tableUpperName}> list${tableUpperName}(Integer pageNo, Integer pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        Page page = (Page) ${tableLowerName}Dao.findAll${tableUpperName}();
+        PageInfo<${tableUpperName}> pageInfo = new PageInfo<>(page);
+        return pageInfo;
+    }
+
+    @Override
+    public Integer update${tableUpperName}(${tableUpperName} ${tableLowerName}) {
+        return ${tableLowerName}Dao.updateByPrimaryKey(${tableLowerName});
+    }
+}

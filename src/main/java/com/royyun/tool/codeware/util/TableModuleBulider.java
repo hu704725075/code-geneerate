@@ -42,6 +42,8 @@ public class TableModuleBulider {
                 // 循环加载table
 
                 String tableName = tables.toUpperCase();
+                //将t去掉
+                 //tableName = tableName.substring(1);
                 //log.info(String.format(" 加载表  ：%s", tableName));
                 rs = dbmd.getTables(null, schema, tableName, types);
                 if (rs.next()) {
