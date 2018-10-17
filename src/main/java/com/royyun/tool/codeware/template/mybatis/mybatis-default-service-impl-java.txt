@@ -8,7 +8,6 @@ import ${package}.pojo.${tableUpperName};
 import ${package}.service.I${tableUpperName}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
