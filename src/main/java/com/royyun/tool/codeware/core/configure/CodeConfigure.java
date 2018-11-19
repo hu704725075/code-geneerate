@@ -131,8 +131,11 @@ public class CodeConfigure {
         String url = context.getValue("jdbc.url");
         String username = context.getValue("jdbc.username");
         String password = context.getValue("jdbc.password");
-        String schema = context.getValue("jdbc.schema");
-        Connection con = DBUtils.getConn(driver, url, username, password, schema);
+        //String schema = context.getValue("jdbc.schema");
+        //orcl
+        //Connection con = DBUtils.getConn(driver, url, username, password,schema);
+        //mysql
+        Connection con = DBUtils.getConnMysql(driver,url,username,password);
         return con;
     }
 }
