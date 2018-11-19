@@ -35,30 +35,41 @@ public class TableModuleBulider {
         ResultSet rs = null;
         String schema = null;
         try {
-            if (dbType == "Oracle") {
-                schema = DBUtils.getOracleSchema();
+            if (true) {
+                schema = con.getSchema();
             }
             if (tables != null) {
                 // 循环加载table
-
-                String tableName = tables.toUpperCase();
+                //orcl 大写
+                //String tableName = tables.toUpperCase();
+                //mysql 小写
+                String tableName = tables.toLowerCase();
                 //将t去掉
                  //tableName = tableName.substring(1);
                 //log.info(String.format(" 加载表  ：%s", tableName));
-                rs = dbmd.getTables(null, schema, tableName, types);
+                //orcl
+               // rs = dbmd.getTables(null, schema, tableName, types);
+                //mysql
+                rs = dbmd.getTables(con.getCatalog(), "%", tableName, types);
                 if (rs.next()) {
                     tableAgency = solveTable(rs);
                     List<ColumnModule> keyList = new ArrayList<ColumnModule>();
                     String keyName = "";
                     List<ColumnModule> ColList = new ArrayList<ColumnModule>();
-                    rs = dbmd.getPrimaryKeys(null, null, tableName);
+                    //orcl
+                    // rs = dbmd.getPrimaryKeys(null, null, tableName);
+                    //mysql
+                    rs = dbmd.getPrimaryKeys(con.getCatalog(), "%", tableName);
                     // 加载这个table的列
                     //log.info(String.format("加载表  ：%s的列", tableName));
                     if (rs.next()) {
                         keyName = getPrimaryKeyName(rs);
                     }
                     // 加载这个table的列
-                    rs = dbmd.getColumns(null, schema, tableName, null);
+                    //orcl
+                    //rs = dbmd.getColumns(null, schema, tableName, null);
+                    //mysql
+                    rs = dbmd.getColumns(con.getCatalog(), "%", tableName, "%");
                     while (rs.next()) {
                         ColumnModule solveColumn = solveColumn(rs, dbType);
                         if (keyName.equals(solveColumn.getColumnName())) {
@@ -125,6 +136,39 @@ public class TableModuleBulider {
     }
 
     public void setTableDescribe(Connection conn, String table,
+                                 TableModule tableAgency) {
+        if (tableAgency == null) {
+            tableAgency = new TableModule();
+        }
+        String sql = "select comments from user_tab_comments u where u.TABLE_NAME ='"
+                + table.toUpperCase() + "'";
+        String describe = (String) OracleHelper.queryForObject(conn, sql);
+        tableAgency.setDescribe(describe);
+        if (tableAgency.getColumns() != null) {
+            for (int i = 0; i < tableAgency.getColumns().size(); i++) {
+                String columnName = tableAgency.getColumns().get(i).getName();
+                sql = "select comments from user_col_comments c where c.TABLE_NAME = '"
+                        + table.toUpperCase()
+                        + "' and c.COLUMN_NAME = '"
+                        + columnName.toUpperCase() + "'";
+                describe = (String) OracleHelper.queryForObject(conn, sql);
+                tableAgency.getColumns().get(i).setDescribe(describe);
+            }
+        }
+        if (tableAgency.getKeys() != null) {
+            for (int i = 0; i < tableAgency.getKeys().size(); i++) {
+                String columnName = tableAgency.getKeys().get(i).getName();
+                sql = "select comments from user_col_comments c where c.TABLE_NAME = '"
+                        + table.toUpperCase()
+                        + "' and c.COLUMN_NAME = '"
+                        + columnName.toUpperCase() + "'";
+                describe = (String) OracleHelper.queryForObject(conn, sql);
+                tableAgency.getKeys().get(i).setDescribe(describe);
+            }
+        }
+    }
+
+    public void setMySqlTableDescribe(Connection conn, String table,
                                  TableModule tableAgency) {
         if (tableAgency == null) {
             tableAgency = new TableModule();

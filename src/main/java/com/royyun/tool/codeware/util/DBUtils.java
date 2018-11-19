@@ -76,4 +76,23 @@ public class DBUtils {
         return "t" + tableSeq.incrementAndGet();
     }
 
+    public static Connection getConnMysql(String driver, String url, String username, String password) {
+        Connection conn = null;
+
+        log.info(String.format("  加载配置项driver  ：%s", driver));
+        log.info(String.format("  加载配置项url     ：%s", url));
+        log.info(String.format("  加载配置项username：%s", username));
+        log.info(String.format("  加载配置项password：%s", password));
+        try {
+            Class.forName(driver);
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(
+                    String.format("[JDBC驱动加载错误][%s]", driver), e);
+        } catch (SQLException e) {
+            throw new RuntimeException(String.format("[数据库连接失败]"), e);
+        }
+        log.info("*************初始化数据库【完成】！");
+        return conn;
+    }
 }
