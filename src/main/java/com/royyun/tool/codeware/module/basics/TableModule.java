@@ -119,7 +119,7 @@ public class TableModule {
     }
 
     public String getTableName() {
-        return tableName;
+        return tableName.toLowerCase();
     }
 
     public void setTableName(String tableName) {
