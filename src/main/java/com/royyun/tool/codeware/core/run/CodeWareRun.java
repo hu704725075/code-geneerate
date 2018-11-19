@@ -16,7 +16,8 @@ public class CodeWareRun {
 //            contextParams.put("tableUpperName", "User");
 //            contextParams.put("tableLowerName", "user");
 //            newDefaultBuilder.setContextParams(contextParams);
-            newDefaultBuilder.builderToSave();
+            //newDefaultBuilder.builderToSave("t_app_user_info");
+            newDefaultBuilder.builderForTableToSave("t_user");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
