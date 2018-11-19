@@ -1,0 +1,208 @@
+package ${package};
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.jdbc.SQL;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.jdbc.SQL;
+
+public interface ${tableUpperName}Dao {
+
+
+    @Results({
+    <% for(each in table.keys) { %>
+        @Result(column = "${each.columnName}", property = "${each.lowerName}"),
+    <% } %>
+    <% for(each in table.columns) { %>
+        @Result(column = "${each.columnName}", property = "${each.lowerName}"),
+     <% } %>
+    })
+    /**
+     * 分页查询
+     * @param map
+     * @return
+     */
+    @SelectProvider(type=sqlProvider.class,method="query${table.upperName}ListByPage")
+    List<${table.upperName}Entity> query${table.upperName}ListByPage(Query query);
+
+    /**
+     * 记录总条数
+     * @param map
+     * @return
+     */
+    @SelectProvider(type=sqlProvider.class,method="query${table.upperName}ByPageCount")
+    int query${table.upperName}ByPageCount(Query query);
+
+    /**
+     * 添加
+     * @param map
+     * @return
+     */
+    @SelectProvider(type=sqlProvider.class,method="insert${table.upperName}")
+    void insert${table.upperName}(Map<String,Object> map);
+
+    /**
+     * 编辑
+     * @param map
+     * @return
+     */
+    @SelectProvider(type=sqlProvider.class,method="update${table.upperName}")
+    void update${table.upperName}(Map<String,Object> map);
+
+    /**
+     * 删除
+     * @param tinsuranceCommonArgument
+     */
+    @Delete("delete from ${table.tableName}  WHERE id = #{id}")
+    int delete${table.upperName}Byid(${table.upperName}Entity entity);
+
+
+    /**
+     * 根据key查询value
+     */
+    @Select("SELECT value FROM ${table.tableName}  WHERE arg_key = #{key};")
+    String getValue(String key);
+
+    /**
+     * sql内部类
+     */
+    class sqlProvider{
+        /**
+         * 分页查询
+         * @param query
+         * @return
+         */
+        public String query${table.upperName}ListByPage(Query query){
+            String sql = new SQL(){
+                {
+                    SELECT(
+                     <%for(each in table.keys) { %>
+                           "\t`${each.columnName}`,\n"+
+                     <% } %>
+                     <%for(each in table.columns) {%>
+                        <% if (eachLP.last) { %>
+                           "\t`${each.columnName}`\n"
+                        <%}else{%>
+                          "\t`${each.columnName}`,\n"+
+                        <% } %>
+                     <% } %>
+                    );
+                    FROM(" ${table.tableName} ");
+                    <% for (each in table.keys) {%>
+                     if(null != query.get("${each.lowerName}") && !"".equals(query.get("${each.lowerName}"))){
+                          WHERE("${each.columnName} = #{${each.lowerName}} ");
+                      }
+                    <%}%>
+                    <% for (each in table.columns) {%>
+                     if(null != query.get("${each.lowerName}") && !"".equals(query.get("${each.lowerName}"))){
+                        <% if (each.voJavaType=="String") { %>
+                         WHERE("${each.columnName} like concat('%',#{${each.lowerName}},'%') ");
+                        <% } %>
+                        <% if (each.voJavaType=="Integer") {%>
+                         WHERE("${each.columnName} = #{${each.lowerName}} ");
+                        <% } %>
+                        <%  if (each.voJavaType == "Date"){ %>
+                         WHERE("DATE(${each.columnName}) = DATE(#{${each.lowerName}})");
+                        <% } %>
+                     }
+                    <%}%>
+
+                    ORDER_BY("create_at desc");
+                }
+            }.toString();
+            return sql +=" limit #{offset},#{limit}";
+        }
+
+        /**
+         * 记录总条数
+         * @param query
+         * @return
+         */
+        public String query${table.upperName}ByPageCount(Query query){
+            String sql = new SQL(){
+                {
+                    SELECT("count(1)");
+                    FROM("${table.tableName}");
+                   <% for (each in table.keys) {%>
+                    if(null != query.get("${each.lowerName}") && !"".equals(query.get("${each.lowerName}"))){
+                         WHERE("${each.columnName} = #{${each.lowerName}} ");
+                     }
+                   <%}%>
+                   <% for (each in table.columns) {%>
+                    if(null != query.get("${each.lowerName}") && !"".equals(query.get("${each.lowerName}"))){
+                       <% if (each.voJavaType=="String") {%>
+                        WHERE("${each.columnName} like concat('%',#{${each.lowerName}},'%') ");
+                       <%} else if (each.voJavaType=="Integer") {%>
+                        WHERE("${each.columnName} like concat('%',#{${each.lowerName}},'%') ");
+                       <% }else if (each.voJavaType == "Date"){ %>
+                        WHERE("DATE(${each.columnName}) = DATE(#{${each.lowerName}})");
+                       <% } %>
+                    }
+                   <%}%>
+                }
+            }.toString();
+            return sql;
+        }
+
+        /**
+         * 新增
+         * @param map
+         * @return
+         */
+        public String insert${table.upperName}(Map<String,Object> map){
+            String sql = new SQL(){
+                {
+                    INSERT_INTO(" ${table.tableName} ");
+                     <%for(each in table.columns){%>
+                        if(null != (map.get("${each.lowerName}")) && !"".equals(map.get("${each.lowerName}"))){
+                             VALUES("link_type","#{linkType}");
+                        }
+                    <%}%>
+                    <%for(each in table.keys){%>
+                        WHERE("${each.columnName} = #{${each.lowerName}}");
+                    <% } %>
+                }
+            }.toString();
+            return sql;
+        }
+
+        /**
+         * 编辑
+         * @param map
+         * @return
+         */
+        public String update${table.upperName}(Map<String,Object> map){
+
+              String sql = new SQL(){
+              {
+                     UPDATE("${table.tableName}");
+                    <%for(each in table.columns){%>
+
+                        if(null != (map.get("${each.lowerName}")) && !"".equals(map.get("${each.lowerName}"))){
+                            SET("${each.columnName} = #{${each.lowerName}}");
+                        }
+
+                    <%}%>
+
+                    <%for(each in table.keys){ %>
+
+                        WHERE("${each.columnName} = #{${each.lowerName}}");
+
+                    <%}%>
+                }
+            }.toString();
+            return sql;
+        }
+
+    }
+}
