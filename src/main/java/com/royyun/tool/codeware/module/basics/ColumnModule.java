@@ -30,7 +30,7 @@ public class ColumnModule {
     private String describe;
 
     public String getColumnName() {
-        return columnName;
+        return columnName.toLowerCase();
     }
 
     public void setColumnName(String columnName) {
