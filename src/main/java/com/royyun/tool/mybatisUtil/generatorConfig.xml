@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 数据库驱动:选择你的本地硬盘上面的数据库驱动包-->
+    <classPathEntry  location="C:\Users\Administrator\.m2\repository\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
+
+    <context id="mysql"  targetRuntime="MyBatis3">
+        <commentGenerator type="com.cloud.mybatisUtil.MyCommentGenerator"/>
+        <!--<commentGenerator>-->
+            <!--<property name="suppressDate" value="false"/>-->
+            <!--&lt;!&ndash; 是否去除自动生成的注释 true：是 ： false:否 &ndash;&gt;-->
+            <!--<property name="suppressAllComments" value="ture"/>-->
+        <!--</commentGenerator>-->
+
+
+        <!--数据库连接驱动类,URL，用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.200.25:3306/tian_cheng?useSSL=false" userId="root" password="Admin_123">
+        </jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!-- 生成(实体)模型的包名和位置-->
+        <!-- dto class -->
+        <javaModelGenerator targetPackage="com.bestpay.health.po"
+                            targetProject="C:\Users\Administrator\Desktop">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- mybatis xml file -->
+        <sqlMapGenerator targetPackage="mapping"
+                         targetProject="C:\Users\Administrator\Desktop">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!-- mapper class -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.bestpay.health.mapper" targetProject="C:\Users\Administrator\Desktop">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+
+
+
+
+        <table tableName="t_insurance_health_sentative" domainObjectName="Sentative" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+
+
+
+
+
+
+    </context>
+</generatorConfiguration>
